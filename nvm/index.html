@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Image Map Pinning</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Interactive Image Map Pinning</h1>
+            <p>Click on the image to add pins and share information</p>
+        </header>
+
+        <div class="main-content">
+            <div class="map-section">
+                <div class="image-overlay" id="imageOverlay">
+                    <img src="472721747_3582870858677865_4099064979741519756_n.png" alt="Base Image" id="baseImage" />
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="pins-list">
+                    <h3>Active Pins</h3>
+                    <div id="pinsList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="pinModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <p><strong>By:</strong> <span id="modalAuthor"></span></p>
+            <p id="modalDescription"></p>
+            <button id="deletePin" class="delete-btn">Delete Pin</button>
+        </div>
+    </div>
+
+    <script src="image-map.js"></script>
+</body>
+</html>
