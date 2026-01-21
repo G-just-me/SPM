@@ -1,9 +1,9 @@
-// Image-based map pinning functionality
+// ฟังชั่น ยรื
 let pins = [];
 let currentPin = null;
 let isAddingPin = false;
 
-// Initialize the application
+// เริ่มใช้แอป
 document.addEventListener('DOMContentLoaded', function() {
     setupImageMap();
     loadPins();
@@ -11,13 +11,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function setupImageMap() {
-    // Hide the real map
     const mapElement = document.getElementById('map');
     if (mapElement) {
         mapElement.style.display = 'none';
     }
     
-    // Setup the image as the clickable map
+    // ทำให้คลิกบนแผนที่ได้
     const imageOverlay = document.getElementById('imageOverlay');
     if (imageOverlay) {
         imageOverlay.style.display = 'block';
@@ -30,7 +29,7 @@ function setupImageMap() {
         imageOverlay.style.overflow = 'hidden';
         imageOverlay.style.background = '#f5f5f5';
         
-        // Setup the image
+        // Setup รูป
         const baseImage = document.getElementById('baseImage');
         if (baseImage) {
             baseImage.style.width = '100%';
@@ -39,7 +38,7 @@ function setupImageMap() {
             baseImage.addEventListener('click', handleImageClick);
         }
         
-        // Add instruction text
+        // เพิ่มข้อความ
         const instruction = document.createElement('div');
         instruction.textContent = 'Click on the image to add a pin';
         instruction.style.cssText = `
@@ -67,10 +66,10 @@ function handleImageClick(e) {
 }
 
 function showPinForm() {
-    // Show the form dynamically when user clicks on image
+    // แสดงแบบฟอร์มแบบไดนามิก
     const formContainer = document.querySelector('.pin-form');
     if (!formContainer) {
-        // Create form container dynamically if not present
+        // สร้าฟอร์มแบบไดนามิกถ้ายังไม่มี
         const sidebar = document.querySelector('.sidebar');
         if (!sidebar) return;
         const newForm = document.createElement('div');
@@ -97,7 +96,7 @@ function showPinForm() {
 }
 
 function setupEventListeners() {
-    // Form submission
+    // ส่งฟอร์ม
     document.getElementById('pinForm').addEventListener('submit', handlePinSubmit);
     
     // Modal close
@@ -108,7 +107,7 @@ function setupEventListeners() {
         }
     });
     
-    // Delete pin
+    // ลบ pin
     document.getElementById('deletePin').addEventListener('click', deleteCurrentPin);
 }
 
@@ -134,7 +133,7 @@ function handlePinSubmit(e) {
 }
 
 function addPin(pinData) {
-    // Create pin element
+    // สร้าง pin
     const pinElement = document.createElement('div');
     pinElement.className = 'image-pin';
     pinElement.dataset.pinId = pinData.id;
@@ -154,7 +153,6 @@ function addPin(pinData) {
         transition: transform 0.2s;
     `;
     
-    // Add hover effect
     pinElement.addEventListener('mouseenter', function() {
         this.style.transform = 'translate(-50%, -50%) scale(1.2)';
     });
@@ -163,12 +161,10 @@ function addPin(pinData) {
         this.style.transform = 'translate(-50%, -50%) scale(1)';
     });
     
-    // Add click event
     pinElement.addEventListener('click', function() {
         openPinModal(pinData);
     });
     
-    // Add tooltip
     pinElement.title = `${pinData.title} by ${pinData.name}`;
     
     const imageOverlay = document.getElementById('imageOverlay');
@@ -189,7 +185,6 @@ function openPinModal(pinData) {
         document.getElementById('deletePin').dataset.pinId = pinData.id;
         modal.style.display = 'block';
 
-        // Add event listener to close modal when clicking the close button
         const closeBtn = modal.querySelector('.close');
         if (closeBtn) {
             closeBtn.onclick = () => {
@@ -197,14 +192,12 @@ function openPinModal(pinData) {
             };
         }
 
-        // Add event listener to close modal when clicking outside the modal content
         window.onclick = (event) => {
             if (event.target === modal) {
                 modal.style.display = 'none';
             }
         };
 
-        // Add event listener to delete pin immediately when modal opens
         const deleteBtn = document.getElementById('deletePin');
         if (deleteBtn) {
             deleteBtn.onclick = () => {
@@ -215,7 +208,6 @@ function openPinModal(pinData) {
     }
 }
 
-// Additional function to delete pin directly from the pins list view button
 function deletePinFromView(pinId) {
     deletePin(pinId);
     closeModal();
@@ -235,13 +227,12 @@ function deleteCurrentPin() {
 }
 
 function deletePin(pinId) {
-    // Remove pin element
+    // ลบ pin
     const pinElement = document.querySelector(`[data-pin-id="${pinId}"]`);
     if (pinElement) {
         pinElement.remove();
     }
     
-    // Remove from pins array
     pins = pins.filter(pin => pin.id !== pinId);
     
     // Update storage
@@ -253,21 +244,19 @@ function deletePin(pinId) {
     savedPins = savedPins.filter(pin => pin.id !== pinId);
     localStorage.setItem('imagePins', JSON.stringify(savedPins));
     
-    // Fix: Remove pin element from DOM if still present
+    //  ลบพินออกจาก DOM หากยังมีอยู่
     const pinElemInDOM = document.querySelector(`[data-pin-id="${pinId}"]`);
     if (pinElemInDOM) {
         pinElemInDOM.remove();
     }
 
-    // Close modal after deletion
     closeModal();
 
-    // Reload the page to fully sync UI and storage state
     setTimeout(() => {
         location.reload();
     }, 300);
 
-    // Additional fix: Remove pin element from pins list UI
+    // ลบองค์ประกอบpinออก
     const pinsList = document.getElementById('pinsList');
     if (pinsList) {
         const pinItem = pinsList.querySelector(`[data-pin-id="${pinId}"]`);
@@ -313,7 +302,7 @@ function updatePinsList() {
             return;
         }
 
-        // Filter unique pins by id to avoid duplicates
+        // กรองPIN ที่ไม่ซ้ำกันเพื่อเลี่ยงการใช้ซ้ำ
         const uniquePins = pins.filter((pin, index, self) =>
             index === self.findIndex((p) => (
                 p.id === pin.id
@@ -336,9 +325,10 @@ function updatePinsList() {
     }
 }
 
-// Add keyboard shortcuts
+// เพิ่มทางลัดของkeyboard
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         closeModal();
     }
 });
+
