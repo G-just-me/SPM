@@ -1,30 +1,14 @@
-// Initialize map
 let map;
 let markers = [];
 let pins = [];
 let currentPin = null;
 
-// Initialize the application
+// เริ่มใช้งาน
 document.addEventListener('DOMContentLoaded', function() {
     initializeMap();
     loadPins();
     setupEventListeners();
 });
-
-function initializeMap() {
-    // Create map centered on a default location (New York City)
-    map = L.map('map').setView([40.7128, -74.0060], 13);
-    
-    // Add tile layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-    
-    // Add click event listener for adding pins
-    map.on('click', function(e) {
-        showPinForm(e.latlng);
-    });
-}
 
 function setupEventListeners() {
     // Form submission
@@ -43,13 +27,12 @@ function setupEventListeners() {
 }
 
 function showPinForm(latlng) {
-    // Store coordinates temporarily
+    // บันทึกพิกัดชั่วคราว
     currentPin = {
         lat: latlng.lat,
         lng: latlng.lng
     };
     
-    // Scroll to form
     document.querySelector('.pin-form').scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -95,7 +78,6 @@ function addPin(pinData) {
             </div>
         `);
     
-    // Store marker reference
     marker.pinId = pinData.id;
     markers.push(marker);
     pins.push(pinData);
@@ -127,17 +109,15 @@ function deleteCurrentPin() {
 }
 
 function deletePin(pinId) {
-    // Remove from pins array
     pins = pins.filter(pin => pin.id !== pinId);
     
-    // Remove marker
-    const markerIndex = markers.findIndex(m => m.pinId === pinId);
+ const markerIndex = markers.findIndex(m => m.pinId === pinId);
     if (markerIndex !== -1) {
         map.removeLayer(markers[markerIndex]);
         markers.splice(markerIndex, 1);
     }
     
-    // Update storage and UI
+    // Update storage
     savePins();
     updatePinsList();
 }
@@ -186,7 +166,6 @@ function loadPins() {
     }
 }
 
-// Utility functions
 function getCurrentLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -195,14 +174,14 @@ function getCurrentLocation() {
     }
 }
 
-// Add keyboard shortcuts
+// Add shortcuts
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         closeModal();
     }
 });
 
-// Add CSS for custom pins
+// Add CSS
 const style = document.createElement('style');
 style.textContent = `
     .custom-pin {
@@ -217,3 +196,4 @@ document.head.appendChild(style);
 
 // Initialize with user's location if available
 setTimeout(getCurrentLocation, 1000);
+
